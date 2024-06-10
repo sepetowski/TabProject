@@ -1,0 +1,6 @@
+@TabProjectServer_HostAddress = http://localhost:5017
+
+GET {{TabProjectServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
