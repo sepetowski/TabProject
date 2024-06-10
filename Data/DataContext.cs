@@ -23,7 +23,9 @@ namespace TabProjectServer.Data
                 .HasOne(x => x.Author)
                 .WithMany(x => x.Books)
                 .HasForeignKey(x => x.AuthorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+                
 
 
             modelBuilder.Entity<Book>()

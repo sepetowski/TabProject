@@ -3,6 +3,7 @@ using TabProjectServer.Data;
 using TabProjectServer.Interfaces;
 using TabProjectServer.Models.Domain;
 using TabProjectServer.Models.DTO.Authors;
+using TabProjectServer.Models.DTO.Books;
 
 namespace TabProjectServer.Services
 {
@@ -13,6 +14,96 @@ namespace TabProjectServer.Services
 
         public AuthorsService(DataContext context) { 
             _context = context;
+        }
+
+        public async Task<GetAllAuthorsResDTO> GetAllAuthorsAsync() {
+
+            var authors = await _context.Authors
+                        .Select(a => new AuthorDTO
+                         {
+                             Id = a.Id,
+                             Name = a.Name,
+                             Surname = a.Surname,
+                             Description = a.Description,
+                             DateOfBirth = a.DateOfBirth
+                         }).ToListAsync();
+
+          
+
+            var response = new GetAllAuthorsResDTO
+            {
+                Authors = authors ?? [],
+                Amount = authors?.Count ?? 0,
+            };
+
+
+
+            return response;
+        }
+
+        public async Task<GetAuthorDetailsResDTO?> GetAuthorDetailsAsync(Guid id)
+        {
+            var existingAuthor = await _context.Authors.Include(user => user.Books)
+            .FirstOrDefaultAsync(user => user.Id == id);
+
+            if (existingAuthor == null)
+                return null;
+
+            var bookDTOs = existingAuthor.Books.Select(book => new BookDTO
+            {
+                Id = book.Id,
+                AuthorId = book.AuthorId,
+                Title = book.Title,
+                NumberOfPage = book.NumberOfPage,
+                PublicationYear = book.PublicationYear
+            }).ToList();
+
+
+            var authorDetailsDTO = new GetAuthorDetailsResDTO
+            {
+                Id = existingAuthor.Id,
+                Name = existingAuthor.Name,
+                Surname = existingAuthor.Surname,
+                Description = existingAuthor.Description,
+                DateOfBirth = existingAuthor.DateOfBirth,
+                Books = bookDTOs,
+                Amount = bookDTOs.Count
+            };
+
+
+            return authorDetailsDTO;
+
+
+        }
+
+
+        public async Task<UpdateAuthorResDTO?> UpdateAuthorAsync(Guid id, UpdateAuthorReqDTO req)
+        {
+            var existingAuthor = await _context.Authors
+               .FirstOrDefaultAsync(a => a.Id == id);
+
+
+            if (existingAuthor == null)
+                return null;
+
+            existingAuthor.Name= req.Name;
+            existingAuthor.Surname= req.Surname;
+            existingAuthor.Description=req.Description;
+            existingAuthor.DateOfBirth= req.DateOfBirth;
+
+
+            await _context.SaveChangesAsync();
+
+
+            var res = new UpdateAuthorResDTO
+            {
+                Name = existingAuthor.Name,
+                Surname = existingAuthor.Surname,
+                Description = existingAuthor.Description,
+                DateOfBirth = existingAuthor.DateOfBirth
+            };
+
+            return res;
         }
 
         public async  Task<AddAuthorResDTO?> CreateAuthorAsync(AddAuthorReqDTO req)
@@ -50,5 +141,32 @@ namespace TabProjectServer.Services
 
             return response;
         }
+
+
+        public async Task<DeleteAuthorResDTO?> DeleteAuthorAsync(Guid id)
+        {
+            var existingAuthor = await _context.Authors
+               .FirstOrDefaultAsync(author=>author.Id==id);
+
+            if (existingAuthor == null) return null;
+
+
+            var deleted = new DeleteAuthorResDTO
+            {
+                Id = existingAuthor.Id,
+                Name = existingAuthor.Name,
+                Surname = existingAuthor.Surname,
+                DateOfBirth = existingAuthor.DateOfBirth,
+                Description = existingAuthor.Description
+            };
+
+    
+            _context.Authors.Remove(existingAuthor);
+          
+            await _context.SaveChangesAsync();
+
+            return deleted;
+        }
     }
 }
+
