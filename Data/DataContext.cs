@@ -9,12 +9,28 @@ namespace TabProjectServer.Data
         public DataContext(DbContextOptions dbContextOptions):base(dbContextOptions) { }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }  
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
 
+
+            modelBuilder.Entity<Book>()
+                .HasOne(x => x.Author)
+                .WithMany(x => x.Books)
+                .HasForeignKey(x => x.AuthorId)
+                .IsRequired();
+
+
+            modelBuilder.Entity<Book>()
+                .HasMany(x => x.Categories)
+                .WithMany(y => y.Books)
+                .UsingEntity(j => j.ToTable("BookCategory"));
+           
 
             var roles = new List<Role>
             {
