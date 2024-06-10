@@ -2,7 +2,7 @@
 
 namespace TabProjectServer.Interfaces
 {
-    public interface IAuthRepository
+    public interface IAuthSerivce
     {
         Task<UserRegisterResDTO?> CreateNewUserAsync(UserRegisterReqDTO req);
         Task<UserLoginResDTO?> LoginUserAsync(UserLoginReqDTO req);

@@ -18,7 +18,7 @@ namespace TabProjectServer.Controllers
 
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterReqDTO request)
         {
 
@@ -35,7 +35,7 @@ namespace TabProjectServer.Controllers
 
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginReqDTO request)
         {
 
@@ -54,7 +54,7 @@ namespace TabProjectServer.Controllers
         }
 
 
-        [HttpPost("refreshToken")]
+        [HttpPost("RefreshToken")]
         public async Task<IActionResult> GenerateRefreshToken([FromBody] RefreshTokenReqDTO refreshTokenDTO)
         {
             var res = await _authService.GenerateRefreshTokenAsync(refreshTokenDTO);

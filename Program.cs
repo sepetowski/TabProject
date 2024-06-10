@@ -6,6 +6,7 @@ using System.Text;
 using TabProjectServer.Interfaces;
 using TabProjectServer.Repositories;
 using Microsoft.OpenApi.Models;
+using TabProjectServer.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+});
+
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -32,20 +41,20 @@ builder.Services.AddSwaggerGen(options =>
         {
             new OpenApiSecurityScheme
             {
-                Reference= new OpenApiReference
+                Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id= JwtBearerDefaults.AuthenticationScheme,
-
+                    Id = JwtBearerDefaults.AuthenticationScheme,
                 },
-                Scheme="Oauth2",
-                Name=JwtBearerDefaults.AuthenticationScheme,
-               In = ParameterLocation.Header
+                Scheme = "oauth2",
+                Name = JwtBearerDefaults.AuthenticationScheme,
+                In = ParameterLocation.Header,
             },
             new List<string>()
         }
     });
 });
+
 
 
 
@@ -64,7 +73,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     });
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthSerivce, AuthService>();
+builder.Services.AddScoped<IAuthorsService, AuthorsService>();
+
 
 var app = builder.Build();
 

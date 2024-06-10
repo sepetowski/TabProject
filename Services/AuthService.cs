@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -107,7 +108,7 @@ namespace TabProjectServer.Repositories
                 return null;
 
             var tokenExpires = DateTime.Now.AddMinutes(60);
-            string token = GenerateJwtToken(tokenExpires, user.Username, user.Email);
+            string token = GenerateJwtToken(tokenExpires, user.Username, user.Email, user.Role.UserRole);
 
             string refreshToken = CreateRandomToken();
 
@@ -135,7 +136,10 @@ namespace TabProjectServer.Repositories
         {
             string username = req.Username;
 
-            var userExist = await _context.Users.FirstOrDefaultAsync((user) => user.Username == username);
+            var userExist = await _context.Users
+                                 .Include(u => u.Role) 
+                                 .FirstOrDefaultAsync(user => user.Username == username);
+
 
             if (userExist == null)
             {
@@ -149,7 +153,7 @@ namespace TabProjectServer.Repositories
             }
 
             var tokenExpires = DateTime.Now.AddMinutes(60);
-            string token = GenerateJwtToken(tokenExpires, userExist.Username, userExist.Email);
+            string token = GenerateJwtToken(tokenExpires, userExist.Username, userExist.Email,userExist.Role.UserRole);
 
             string refreshToken = CreateRandomToken();
 
@@ -207,15 +211,17 @@ namespace TabProjectServer.Repositories
         {
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
-        private string GenerateJwtToken(DateTime tokenExpires, string username, string email)
+        private string GenerateJwtToken(DateTime tokenExpires, string username, string email, UserRole userRole)
         {
+            string role = userRole == 0 ? "Admin" : "User";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
                 new (ClaimTypes.Name,username),
-                new (ClaimTypes.Email,email)
+                new (ClaimTypes.Email,email),
+                new (ClaimTypes.Role,role)
             };
 
             var secToken = new JwtSecurityToken(

@@ -16,5 +16,6 @@
 
 
         public required Role Role { get; set; }
+
     }
 }
