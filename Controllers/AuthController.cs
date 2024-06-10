@@ -9,12 +9,12 @@ namespace TabProjectServer.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _authRepository;
+        private readonly IAuthSerivce _authService;
 
 
-        public AuthController(IAuthRepository authRepository)
+        public AuthController(IAuthSerivce authService)
         {
-            _authRepository = authRepository;
+            _authService = authService;
 
         }
 
@@ -24,7 +24,7 @@ namespace TabProjectServer.Controllers
 
             try
             {
-                var newUser = await _authRepository.CreateNewUserAsync(request);
+                var newUser = await _authService.CreateNewUserAsync(request);
                 return Ok(newUser);
 
             }
@@ -41,7 +41,7 @@ namespace TabProjectServer.Controllers
 
             try
             {
-                var user = await _authRepository.LoginUserAsync(request);
+                var user = await _authService.LoginUserAsync(request);
                 return Ok(user);
 
             }
@@ -57,7 +57,7 @@ namespace TabProjectServer.Controllers
         [HttpPost("refreshToken")]
         public async Task<IActionResult> GenerateRefreshToken([FromBody] RefreshTokenReqDTO refreshTokenDTO)
         {
-            var res = await _authRepository.GenerateRefreshTokenAsync(refreshTokenDTO);
+            var res = await _authService.GenerateRefreshTokenAsync(refreshTokenDTO);
             if (res == null)
                 return Unauthorized();
 

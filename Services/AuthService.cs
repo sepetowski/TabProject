@@ -11,12 +11,12 @@ using TabProjectServer.Models.DTO.Auth;
 
 namespace TabProjectServer.Repositories
 {
-    public class AuthRepository :IAuthRepository
+    public class AuthService :IAuthSerivce
     {
         private readonly IConfiguration _config;
         private readonly DataContext _context;
 
-        public AuthRepository(IConfiguration config, DataContext context)
+        public AuthService(IConfiguration config, DataContext context)
         {
             _config = config;
             _context = context;
@@ -25,13 +25,8 @@ namespace TabProjectServer.Repositories
 
        public async Task<UserRegisterResDTO?> CreateNewUserAsync(UserRegisterReqDTO req)
         {
-
-           
-
-
                 string username = req.Username;
                 string email = req.Email;
-
 
 
                 var existEmail = await _context.Users.FirstOrDefaultAsync((user) => user.Email == email);
@@ -71,9 +66,6 @@ namespace TabProjectServer.Repositories
                 CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
 
-
-
-
                 var user = new User
                 {
                     Id = Guid.NewGuid(),
@@ -96,13 +88,7 @@ namespace TabProjectServer.Repositories
 
                 };
 
-
-
-
-
                 return newUserResponse;
-            
-           
         }
 
         public async Task<RefreshTokenResDTO?> GenerateRefreshTokenAsync(RefreshTokenReqDTO req)
@@ -192,7 +178,6 @@ namespace TabProjectServer.Repositories
             };
 
             return newUserResponse;
-
         }
 
 
@@ -242,8 +227,6 @@ namespace TabProjectServer.Repositories
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(secToken);
-
-
         }
 
   
