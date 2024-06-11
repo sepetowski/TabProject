@@ -12,8 +12,8 @@ using TabProjectServer.Data;
 namespace TabProjectServer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240610174542_FixTypo")]
-    partial class FixTypo
+    [Migration("20240611140640_UpdateAuthors")]
+    partial class UpdateAuthors
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,12 +75,15 @@ namespace TabProjectServer.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("NumberOfPage")
+                    b.Property<string>("BookDescripton")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PublicationYear")
+                    b.Property<int>("NumberOfPage")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()

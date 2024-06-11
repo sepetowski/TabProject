@@ -72,12 +72,15 @@ namespace TabProjectServer.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("NumberOfPage")
+                    b.Property<string>("BookDescripton")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PublicationYear")
+                    b.Property<int>("NumberOfPage")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()

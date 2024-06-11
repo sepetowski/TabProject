@@ -10,7 +10,7 @@ namespace TabProjectServer.Models.DTO.Authors
         public string? Description { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
-        public required List<BookDTO> Books{ get; set; } = new();
+        public required List<BookWithCategoriesDTO> Books{ get; set; } = new();
         public required int Amount { get; set; }
     }
 }

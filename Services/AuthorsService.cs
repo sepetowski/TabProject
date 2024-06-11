@@ -4,6 +4,7 @@ using TabProjectServer.Interfaces;
 using TabProjectServer.Models.Domain;
 using TabProjectServer.Models.DTO.Authors;
 using TabProjectServer.Models.DTO.Books;
+using TabProjectServer.Models.DTO.Categories;
 
 namespace TabProjectServer.Services
 {
@@ -43,21 +44,24 @@ namespace TabProjectServer.Services
 
         public async Task<GetAuthorDetailsResDTO?> GetAuthorDetailsAsync(Guid id)
         {
-            var existingAuthor = await _context.Authors.Include(user => user.Books)
-            .FirstOrDefaultAsync(user => user.Id == id);
+            var existingAuthor = await _context.Authors
+                    .Include(author => author.Books)
+                    .ThenInclude(book => book.Categories) 
+                    .FirstOrDefaultAsync(author => author.Id == id);
 
             if (existingAuthor == null)
                 return null;
 
-            var bookDTOs = existingAuthor.Books.Select(book => new BookDTO
+            var bookDTOs = existingAuthor.Books.Select(book => new BookWithCategoriesDTO
             {
                 Id = book.Id,
-                AuthorId = book.AuthorId,
                 Title = book.Title,
-                NumberOfPage = book.NumberOfPage,
-                PublicationYear = book.PublicationYear
+                Categories = book.Categories.Select(category => new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name
+                }).ToList()
             }).ToList();
-
 
             var authorDetailsDTO = new GetAuthorDetailsResDTO
             {

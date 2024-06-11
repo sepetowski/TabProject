@@ -75,7 +75,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddScoped<IAuthSerivce, AuthService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
-
+builder.Services.AddScoped<ICategoriesService,CategoriesService>();
+builder.Services.AddScoped<IBooksService,BooksService>();
 
 var app = builder.Build();
 
