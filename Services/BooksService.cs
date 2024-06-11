@@ -97,8 +97,7 @@ namespace TabProjectServer.Services
 
             var categories = await _context.Categories.Where(c => bookReqDTO.CategoriesIds.Contains(c.Id)).ToListAsync();
 
-            if (categories == null || categories.Count == 0)
-                throw new Exception("Book must contains at least one category");
+          
 
             var newBook = new Book
             {
@@ -157,9 +156,6 @@ namespace TabProjectServer.Services
 
             var categories = await _context.Categories.Where(c => req.CategoriesIds.Contains(c.Id)).ToListAsync();
 
-
-            if (categories == null || categories.Count == 0)
-                throw new Exception("Book must contains at least one category");
 
             book.Categories.Clear();
 

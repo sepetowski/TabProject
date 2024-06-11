@@ -23,6 +23,7 @@ namespace TabProjectServer.Controllers
 
 
         [HttpGet()]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var res = await _booksService.GetAllBooksAsync();
@@ -32,6 +33,7 @@ namespace TabProjectServer.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> GetBookDetails([FromRoute] Guid id)
         {
             var res = await _booksService.GetBookDetailsAsync(id);
@@ -44,7 +46,7 @@ namespace TabProjectServer.Controllers
 
         [HttpPut()]
         [Route("{id:Guid}")]
-     
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateBookReqDTO req)
         {
             try
@@ -62,6 +64,7 @@ namespace TabProjectServer.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> AddBook([FromBody] AddBookReqDTO req)
         {
             try
@@ -79,6 +82,7 @@ namespace TabProjectServer.Controllers
 
         [HttpDelete()]
         [Route("{id:Guid}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var res = await _booksService.DeleteBookResAsync(id);

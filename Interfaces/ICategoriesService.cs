@@ -6,5 +6,8 @@ namespace TabProjectServer.Interfaces
     {
 
         Task<AddCategoryResDTO?> AddCategoryAsync(AddCategoryReqDTO category);
+        Task<DeleteCategoryResDTO?> DeleteCategoryAsync(Guid id);
+        Task<GetAllCategoriesResDTO> GetAllCategoriesAsync();
+        Task<UpdateCategoryResDTO?> UpdateCategoryAsync(Guid id, UpdateCategoryReqDTO category);
     }
 }
