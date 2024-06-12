@@ -77,6 +77,9 @@ builder.Services.AddScoped<IAuthSerivce, AuthService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<ICategoriesService,CategoriesService>();
 builder.Services.AddScoped<IBooksService,BooksService>();
+builder.Services.AddScoped<ILoansService,LoansService>();
+builder.Services.AddScoped<IReservationsService, ReservationsService>();
+
 
 var app = builder.Build();
 

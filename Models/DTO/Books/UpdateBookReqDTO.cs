@@ -17,6 +17,9 @@ namespace TabProjectServer.Models.DTO.Books
         public DateTime PublicationDate { get; set; }
 
         [Required]
+        public int AvailableCopies { get; set; }
+
+        [Required]
         public List<Guid> CategoriesIds { get; set; }
     }
 }

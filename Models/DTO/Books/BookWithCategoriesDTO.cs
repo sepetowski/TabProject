@@ -7,8 +7,9 @@ namespace TabProjectServer.Models.DTO.Books
         public required Guid Id { get; set; }
         public required string Title { get; set; }
 
+        public required bool isAvaible { get; set; }
 
-    
+
         public required List<CategoryDTO> Categories { get; set; }
     }
 }

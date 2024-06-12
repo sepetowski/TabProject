@@ -13,6 +13,8 @@ namespace TabProjectServer.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Loan> Loans { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +34,36 @@ namespace TabProjectServer.Data
                 .HasMany(x => x.Categories)
                 .WithMany(y => y.Books)
                 .UsingEntity(j => j.ToTable("BookCategory"));
-           
+
+
+            modelBuilder.Entity<Loan>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Loans)
+                .HasForeignKey(x => x.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Loan>()
+                .HasOne(x => x.Book)
+                .WithMany(x => x.Loans)
+                .HasForeignKey(x => x.BookId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Reservations)
+                .HasForeignKey(x => x.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(x => x.Book)
+                .WithMany(x => x.Reservations)
+                .HasForeignKey(x => x.BookId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             var roles = new List<Role>
             {

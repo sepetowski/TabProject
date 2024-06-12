@@ -33,6 +33,7 @@ namespace TabProjectServer.Services
                 AuthorId = book.Author.Id,
                 AuthorName = book.Author.Name,
                 AuthorSurname = book.Author.Surname,
+                isAvaible= book.AvailableCopies>0,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,
@@ -71,6 +72,7 @@ namespace TabProjectServer.Services
                 AuthorDescription = book.Author.Description,
                 AuthorDateOfBirth = book.Author.DateOfBirth,
                 BookDescripton= book.BookDescripton,
+                isAvaible= book.AvailableCopies>0,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,
@@ -108,7 +110,8 @@ namespace TabProjectServer.Services
                 PublicationDate = bookReqDTO.PublicationDate,
                 Author = existingAuthor,
                 BookDescripton= bookReqDTO.BookDescripton,
-                Categories = new List<Category>()
+                Categories = new List<Category>(),
+                AvailableCopies = bookReqDTO.AvailableCopies,
             };
 
 
@@ -152,6 +155,7 @@ namespace TabProjectServer.Services
             book.BookDescripton = req.BookDescripton;
             book.NumberOfPage = req.NumberOfPage;
             book.PublicationDate = req.PublicationDate;
+            book.AvailableCopies = req.AvailableCopies;
 
 
             var categories = await _context.Categories.Where(c => req.CategoriesIds.Contains(c.Id)).ToListAsync();
@@ -174,6 +178,7 @@ namespace TabProjectServer.Services
                 BookDescripton = book.BookDescripton,
                 NumberOfPage = book.NumberOfPage,
                 PublicationDate = book.PublicationDate,
+                AvailableCopies=book.AvailableCopies,
                 Categories = book.Categories.Select(c => new CategoryDTO
                 {
                     Id = c.Id,

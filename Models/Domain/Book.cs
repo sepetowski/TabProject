@@ -9,9 +9,14 @@
         public required int NumberOfPage { get; set; }
         public required DateTime PublicationDate { get; set; }
 
+        public required int AvailableCopies { get; set; }
+
 
         public required Author Author { get; set; }
-        public required ICollection<Category> Categories { get; set; }
+        public ICollection<Category> Categories { get; set; }
+
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
 
 

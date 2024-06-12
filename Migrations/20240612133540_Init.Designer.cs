@@ -12,7 +12,7 @@ using TabProjectServer.Data;
 namespace TabProjectServer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240611131105_Init")]
+    [Migration("20240612133540_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -75,6 +75,13 @@ namespace TabProjectServer.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AvailableCopies")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BookDescripton")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NumberOfPage")
                         .HasColumnType("int");
 
@@ -105,6 +112,60 @@ namespace TabProjectServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("TabProjectServer.Models.Domain.Loan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LoanDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("TabProjectServer.Models.Domain.Reservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("TabProjectServer.Models.Domain.Role", b =>
@@ -210,6 +271,44 @@ namespace TabProjectServer.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("TabProjectServer.Models.Domain.Loan", b =>
+                {
+                    b.HasOne("TabProjectServer.Models.Domain.Book", "Book")
+                        .WithMany("Loans")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TabProjectServer.Models.Domain.User", "User")
+                        .WithMany("Loans")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TabProjectServer.Models.Domain.Reservation", b =>
+                {
+                    b.HasOne("TabProjectServer.Models.Domain.Book", "Book")
+                        .WithMany("Reservations")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TabProjectServer.Models.Domain.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TabProjectServer.Models.Domain.User", b =>
                 {
                     b.HasOne("TabProjectServer.Models.Domain.Role", "Role")
@@ -224,6 +323,20 @@ namespace TabProjectServer.Migrations
             modelBuilder.Entity("TabProjectServer.Models.Domain.Author", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("TabProjectServer.Models.Domain.Book", b =>
+                {
+                    b.Navigation("Loans");
+
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("TabProjectServer.Models.Domain.User", b =>
+                {
+                    b.Navigation("Loans");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

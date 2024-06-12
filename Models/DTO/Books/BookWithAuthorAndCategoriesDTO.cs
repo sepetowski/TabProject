@@ -12,6 +12,9 @@ namespace TabProjectServer.Models.DTO.Books
         public required string AuthorName { get; set; }
         public required string AuthorSurname { get; set; }
 
+        public required bool isAvaible { get; set; }
+
+
         public required List<CategoryDTO> Categories { get; set; }
 
 

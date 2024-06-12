@@ -56,6 +56,7 @@ namespace TabProjectServer.Services
             {
                 Id = book.Id,
                 Title = book.Title,
+                isAvaible= book.AvailableCopies > 0,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,
@@ -72,6 +73,7 @@ namespace TabProjectServer.Services
                 DateOfBirth = existingAuthor.DateOfBirth,
                 Books = bookDTOs,
                 Amount = bookDTOs.Count
+               
             };
 
 
