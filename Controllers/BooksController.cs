@@ -44,15 +44,14 @@ namespace TabProjectServer.Controllers
         }
 
 
-        [HttpPut()]
-        [Route("{id:Guid}")]
+        [HttpPost("UpdateBook")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateBookReqDTO req)
+        public async Task<IActionResult> Update([FromForm]  UpdateBookReqDTO req)
         {
             try
             {
 
-            var res = await _booksService.UpdateBookAsync(id, req);
+            var res = await _booksService.UpdateBookAsync(req);
 
                 return Ok(res);
 
@@ -63,9 +62,9 @@ namespace TabProjectServer.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost("AddBook")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> AddBook([FromBody] AddBookReqDTO req)
+        public async Task<IActionResult> AddBook([FromForm] AddBookReqDTO req)
         {
             try
             {

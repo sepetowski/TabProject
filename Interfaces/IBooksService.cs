@@ -11,6 +11,6 @@ namespace TabProjectServer.Interfaces
         Task<GetBookDetailsResDTO?> GetBookDetailsAsync(Guid id);
         Task<DeleteBookResDTO?> DeleteBookResAsync(Guid id);
 
-        Task<UpdateBookResDTO?> UpdateBookAsync(Guid id,UpdateBookReqDTO req);
+        Task<UpdateBookResDTO?> UpdateBookAsync(UpdateBookReqDTO req);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TabProjectServer.Models.DTO.Books
 {
@@ -15,11 +16,12 @@ namespace TabProjectServer.Models.DTO.Books
         [Required]
         public  DateTime PublicationDate { get; set; }
 
+        public IFormFile? ImageFile { get; set; }
+
         [Required]
         public int AvailableCopies { get; set; }
 
-        [Required]
-        public List<Guid> CategoriesIds { get; set; }
+        public List<Guid>? CategoriesIds { get; set; }
 
 
     }

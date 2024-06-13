@@ -11,6 +11,7 @@
 
         public required int AvailableCopies { get; set; }
 
+        public string? ImageUrl { get; set; } = null;
 
         public required Author Author { get; set; }
         public ICollection<Category> Categories { get; set; }

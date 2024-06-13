@@ -10,6 +10,7 @@ namespace TabProjectServer.Models.DTO.Books
         public required int NumberOfPage { get; set; }
         public required DateTime PublicationDate { get; set; }
 
+        public string? ImageUrl { get; set; } = null;
         public required bool isAvaible { get; set; }
 
         public required Guid AuthorId { get; set; }

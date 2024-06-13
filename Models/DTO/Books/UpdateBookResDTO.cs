@@ -15,6 +15,8 @@ namespace TabProjectServer.Models.DTO.Books
       
         public required DateTime PublicationDate { get; set; }
 
+        public string? ImageUrl { get; set; }
+
         public required int AvailableCopies { get; set; }
 
         public required List<CategoryDTO> Categories { get; set; }

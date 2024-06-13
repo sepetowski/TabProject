@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TabProjectServer.Models.DTO.Books
 {
     public class UpdateBookReqDTO
     {
+
+        [Required]
+        public Guid Id { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -16,10 +20,12 @@ namespace TabProjectServer.Models.DTO.Books
         [Required]
         public DateTime PublicationDate { get; set; }
 
+   
+        public IFormFile? ImageFile { get; set; }
+
         [Required]
         public int AvailableCopies { get; set; }
 
-        [Required]
-        public List<Guid> CategoriesIds { get; set; }
+        public List<Guid>? CategoriesIds { get; set; }
     }
 }

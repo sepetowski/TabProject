@@ -57,6 +57,7 @@ namespace TabProjectServer.Services
                 Id = book.Id,
                 Title = book.Title,
                 isAvaible= book.AvailableCopies > 0,
+                ImageUrl= book.ImageUrl,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,

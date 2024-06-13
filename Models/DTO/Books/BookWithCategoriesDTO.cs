@@ -7,6 +7,8 @@ namespace TabProjectServer.Models.DTO.Books
         public required Guid Id { get; set; }
         public required string Title { get; set; }
 
+        public string? ImageUrl { get; set; } = null;
+
         public required bool isAvaible { get; set; }
 
 
