@@ -252,6 +252,66 @@ namespace TabProjectServer.Repositories
             };
             return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
         }
+
+        public async Task<GetAllUsersResDTO> GetAllUsersAsync()
+        {
+            var users = await _context.Users
+             .Include(u=>u.Role)
+             .Where(u => u.Role.UserRole == UserRole.User)
+             .Select(user => new UserDTO
+             {
+                 Id = user.Id,
+                 CreatedAt = user.CreatedAt,
+                 Email = user.Email,
+                 Username = user.Username,
+                 FirstName = user.FirstName,
+                 LastName = user.LastName
+             })
+             .ToListAsync();
+
+
+            var result = new GetAllUsersResDTO
+            {
+                Users = users,
+                Amount = users.Count
+            };
+
+            return result;
+        }
+
+        public async Task<UpdateUserResDTO?> UpdateUserAsync(Guid id, UpdateUserReqDTO req)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            var existUsername = await _context.Users.FirstOrDefaultAsync((user) => user.Username == req.Username);
+
+            if (existUsername != null)
+                throw new Exception("This username is already taken");
+            
+            
+
+  
+            user.Username = req.Username;
+            user.FirstName = req.FirstName;
+            user.LastName = req.LastName;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            var updatedUser = new UpdateUserResDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+
+            return updatedUser;
+        }
     }
 }
 

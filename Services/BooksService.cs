@@ -32,23 +32,34 @@ namespace TabProjectServer.Services
             var books = await _context.Books
                         .Include(b => b.Author)
                         .Include(b => b.Categories)
+                        .Include(b => b.Reservations)
                         .ToListAsync();
 
-            var booksWithAuthorsAndCategories = books.Select(book => new BookWithAuthorAndCategoriesDTO
+            var booksWithAuthorsAndCategories = books.Select(book =>
             {
-                Id = book.Id,
-                Title = book.Title,
-                AuthorId = book.Author.Id,
-                AuthorName = book.Author.Name,
-                AuthorSurname = book.Author.Surname,
-                ImageUrl= book.ImageUrl,
-                isAvaible= book.AvailableCopies>0,
-                Categories = book.Categories.Select(category => new CategoryDTO
+              
+                var activeReservationsCount = book.Reservations.Count(r => r.IsActive);
+
+              
+                var isAvaible = book.AvailableCopies > 0 && activeReservationsCount < book.AvailableCopies;
+
+                return new BookWithAuthorAndCategoriesDTO
                 {
-                    Id = category.Id,
-                    Name = category.Name
-                }).ToList()
+                    Id = book.Id,
+                    Title = book.Title,
+                    AuthorId = book.Author.Id,
+                    AuthorName = book.Author.Name,
+                    AuthorSurname = book.Author.Surname,
+                    ImageUrl = book.ImageUrl,
+                    isAvaible = isAvaible,
+                    Categories = book.Categories.Select(category => new CategoryDTO
+                    {
+                        Id = category.Id,
+                        Name = category.Name
+                    }).ToList()
+                };
             }).ToList();
+
 
             return new GetAllBooksResDTO
             {
@@ -62,11 +73,16 @@ namespace TabProjectServer.Services
             var book = await _context.Books
                .Include(b => b.Author)
                .Include(b => b.Categories)
+               .Include(b => b.Reservations)
                .FirstOrDefaultAsync(b => b.Id == id);
 
          
             if (book == null)
                 return null;
+
+            var activeReservationsCount = book.Reservations.Count(r => r.IsActive);
+
+            var isAvaible = book.AvailableCopies > 0 && activeReservationsCount < book.AvailableCopies;
 
 
             var bookDetails = new GetBookDetailsResDTO
@@ -82,7 +98,7 @@ namespace TabProjectServer.Services
                 AuthorDescription = book.Author.Description,
                 AuthorDateOfBirth = book.Author.DateOfBirth,
                 BookDescripton= book.BookDescripton,
-                isAvaible= book.AvailableCopies>0,
+                isAvaible= isAvaible,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,

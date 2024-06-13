@@ -52,7 +52,10 @@ namespace TabProjectServer.Services
             if(book == null)
                 throw new Exception("Book not found");
 
-            if (book.AvailableCopies > 0)
+
+            var activeReservationsCount = await _context.Reservations.CountAsync(r => r.BookId == book.Id && r.IsActive);
+
+            if (book.AvailableCopies > 0 && activeReservationsCount < book.AvailableCopies)
                 throw new Exception("You can just loan this book");
 
             var existingReservation = await _context.Reservations.FirstOrDefaultAsync(r => r.UserId == req.UserId && r.BookId == req.BookId && r.IsActive);

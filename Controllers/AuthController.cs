@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TabProjectServer.Interfaces;
 using TabProjectServer.Models.DTO.Auth;
@@ -62,6 +63,33 @@ namespace TabProjectServer.Controllers
                 return Unauthorized();
 
             return Ok(res);
+        }
+
+
+        [HttpGet("GetUsers")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _authService.GetAllUsersAsync();
+            return Ok(result);
+        }
+
+
+        [HttpPut("UpdateUser/{id:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserReqDTO req)
+        {
+
+            try
+            {
+
+            var result = await _authService.UpdateUserAsync(id, req);
+           
+            return Ok(result);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
