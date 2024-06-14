@@ -102,7 +102,7 @@ namespace TabProjectServer.Repositories
                 return null;
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync((user => user.Username == username));
+            var user = await _context.Users.Include(u=>u.Role).FirstOrDefaultAsync((user => user.Username == username));
 
             if (user is null || user.RefreshToken != req.RefreshToken || user.RefreshTokenExpires < DateTime.Now)
                 return null;
