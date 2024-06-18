@@ -99,6 +99,7 @@ namespace TabProjectServer.Services
                 AuthorDateOfBirth = book.Author.DateOfBirth,
                 BookDescripton= book.BookDescripton,
                 isAvaible= isAvaible,
+                availableCopies= book.AvailableCopies,
                 Categories = book.Categories.Select(category => new CategoryDTO
                 {
                     Id = category.Id,
@@ -202,7 +203,7 @@ namespace TabProjectServer.Services
                 var urlFilePath = await UpdateBookImageAsync(book.Id, req.ImageFile);
                 book.ImageUrl = urlFilePath;
             }
-            else
+            else if(req.ImageFile == null && req.DeleteFile) 
             {
                 
                 string imagesDirectory = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
