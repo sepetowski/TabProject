@@ -52,6 +52,10 @@ namespace TabProjectServer.Services
             if(book == null)
                 throw new Exception("Book not found");
 
+            var activeLoan = await _context.Loans.FirstOrDefaultAsync(l => l.UserId == req.UserId && l.BookId == req.BookId && l.ReturnDate == null);
+            if (activeLoan != null)
+                throw new Exception("You already have an active loan for this book.");
+
 
             var activeReservationsCount = await _context.Reservations.CountAsync(r => r.BookId == book.Id && r.IsActive);
 
@@ -99,9 +103,11 @@ namespace TabProjectServer.Services
                 Username = reservation.User.Username,
                 BookId = reservation.BookId,
                 BookTitle = reservation.Book.Title,
-                BookAuthor = reservation.Book.Author.Name,
+                BookAuthorName = reservation.Book.Author.Name,
+                BookAuthorSurnameName = reservation.Book.Author.Surname,
                 ReservationDate = reservation.ReservationDate,
-                IsActive = reservation.IsActive
+                IsActive = reservation.IsActive,
+                ImageUrl = reservation.Book.ImageUrl
             }).ToList();
 
             return new GetAllReservationsResDTO
@@ -129,9 +135,11 @@ namespace TabProjectServer.Services
                 Username = reservation.User.Username,
                 BookId = reservation.BookId,
                 BookTitle = reservation.Book.Title,
-                BookAuthor = reservation.Book.Author.Name,
+                BookAuthorName = reservation.Book.Author.Name,
+                BookAuthorSurnameName = reservation.Book.Author.Surname,
                 ReservationDate = reservation.ReservationDate,
-                IsActive = reservation.IsActive
+                IsActive = reservation.IsActive,
+                ImageUrl= reservation.Book.ImageUrl
             }).ToList();
 
             return new GetUserReservationsResDTO

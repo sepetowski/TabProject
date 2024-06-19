@@ -18,7 +18,7 @@ namespace TabProjectServer.Models.DTO.Books
 
         public IFormFile? ImageFile { get; set; }
 
-        [Required,Range(1,100)]
+        [Required,Range(0,100)]
         public int AvailableCopies { get; set; }
 
         public List<Guid>? CategoriesIds { get; set; }

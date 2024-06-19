@@ -105,9 +105,11 @@ namespace TabProjectServer.Services
                 Username = loan.User.Username,
                 BookId = loan.BookId,
                 BookTitle = loan.Book.Title,
-                BookAuthor = loan.Book.Author.Name, 
+                BookAuthorName = loan.Book.Author.Name,
+                BookAuthorSurnameName = loan.Book.Author.Surname,
                 LoanDate = loan.LoanDate,
-                ReturnDate = loan.ReturnDate
+                ReturnDate = loan.ReturnDate,
+                ImageUrl = loan.Book.ImageUrl
             }).ToList();
 
             var response = new GetAllLoansResDTO
@@ -137,9 +139,12 @@ namespace TabProjectServer.Services
                 Username = loan.User.Username,
                 BookId = loan.BookId,
                 BookTitle = loan.Book.Title,
-                BookAuthor = loan.Book.Author.Name, 
+                BookAuthorName = loan.Book.Author.Name,
+                BookAuthorSurnameName= loan.Book.Author.Surname,
                 LoanDate = loan.LoanDate,
-                ReturnDate = loan.ReturnDate
+                ReturnDate = loan.ReturnDate,
+                ImageUrl= loan.Book.ImageUrl
+                
             }).ToList();
 
             var response = new GetUserLoansResDTO
